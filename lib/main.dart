@@ -4,11 +4,11 @@ import 'package:table_calendar/table_calendar.dart';
 
 // Example holidays
 final Map<DateTime, List> _holidays = {
-  DateTime(2020, 1, 1): ['New Year\'s Day'],
-  DateTime(2020, 1, 6): ['Epiphany'],
-  DateTime(2020, 2, 14): ['Valentine\'s Day'],
-  DateTime(2020, 4, 21): ['Easter Sunday'],
-  DateTime(2020, 4, 22): ['Easter Monday'],
+  DateTime(2021, 1, 1): ['New Year\'s Day'],
+  DateTime(2021, 1, 6): ['Epiphany'],
+  DateTime(2021, 2, 14): ['Valentine\'s Day'],
+  DateTime(2021, 4, 21): ['Easter Sunday'],
+  DateTime(2021, 4, 22): ['Easter Monday'],
 };
 
 void main() {
@@ -153,8 +153,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         children: <Widget>[
           // Switch out 2 lines below to play with TableCalendar's settings
           //-----------------------
-          _buildTableCalendar(),
-          // _buildTableCalendarWithBuilders(),
+          // _buildTableCalendar(), // Active le style slm
+          _buildTableCalendarWithBuilders(), // Active le builder
           const SizedBox(height: 8.0),
           _buildButtons(),
           const SizedBox(height: 8.0),
@@ -215,11 +215,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       },
       calendarStyle: CalendarStyle(
         outsideDaysVisible: false,
-        weekendStyle: TextStyle().copyWith(color: Colors.blue[800]),
-        holidayStyle: TextStyle().copyWith(color: Colors.blue[800]),
+        weekendStyle: TextStyle().copyWith(color: Colors.green[900]),
+        holidayStyle: TextStyle().copyWith(color: Colors.amber[900]),
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
-        weekendStyle: TextStyle().copyWith(color: Colors.blue[600]),
+        weekendStyle: TextStyle().copyWith(color: Colors.green[950]),
       ),
       headerStyle: HeaderStyle(
         centerHeaderTitle: true,
@@ -246,13 +246,22 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           return Container(
             margin: const EdgeInsets.all(4.0),
             padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-            color: Colors.amber[400],
+            color: Colors.red[100],
             width: 100,
             height: 100,
-            child: Text(
-              '${date.day}',
-              style: TextStyle().copyWith(fontSize: 16.0),
-            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+              Text(
+                  '${date.day}',
+                  style: TextStyle().copyWith(fontSize: 16.0),
+              ),
+                Icon(
+                  Icons.today_rounded,
+                  size: 20.0,
+                ),
+              ],
+            )
           );
         },
         markersBuilder: (context, date, events, holidays) {
@@ -296,10 +305,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: _calendarController.isSelected(date)
-            ? Colors.brown[500]
+            ? Colors.pink[500]
             : _calendarController.isToday(date)
-            ? Colors.brown[300]
-            : Colors.blue[400],
+            ? Colors.pink[300]
+            : Colors.pink[400],
       ),
       width: 16.0,
       height: 16.0,
@@ -319,7 +328,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return Icon(
       Icons.add_box,
       size: 20.0,
-      color: Colors.blueGrey[800],
+      color: Colors.amber[800],
     );
   }
 
