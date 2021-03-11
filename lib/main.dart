@@ -40,9 +40,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Map<DateTime, List> _events;
   List _selectedEvents;
+  int _counter = 0;
   AnimationController _animationController;
   CalendarController _calendarController;
-
+  void _incrementCounter() { // Fn Action à l'appui du bouton
+    setState(() {
+      _counter = _counter + 2; // inventer qqch
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -153,8 +158,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           const SizedBox(height: 8.0),
           _buildButtons(),
           const SizedBox(height: 8.0),
+
           Expanded(child: _buildEventList()),
+
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.calendar_today),
       ),
     );
   }
@@ -189,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   // More advanced TableCalendar configuration (using Builders & Styles)
   Widget _buildTableCalendarWithBuilders() {
     return TableCalendar(
-      locale: 'pl_PL',
+      locale: 'fr_FR',
       calendarController: _calendarController,
       events: _events,
       holidays: _holidays,
@@ -356,6 +368,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               DateTime(dateTime.year, dateTime.month, dateTime.day),
               runCallback: true,
             );
+
           },
         ),
       ],
