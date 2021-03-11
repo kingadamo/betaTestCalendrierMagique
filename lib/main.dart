@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Table Calendar Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.pink,
       ),
       home: MyHomePage(title: 'Table Calendar Demo'),
     );
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         'Event C5'
       ],
       _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-      _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
+      _selectedDay: ['Aujourdhui', 'Event B7', 'Event C7', 'Event D7'],
       _selectedDay.add(Duration(days: 1)): [
         'Event A8',
         'Event B8',
@@ -177,18 +177,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       calendarController: _calendarController,
       events: _events,
       holidays: _holidays,
-      startingDayOfWeek: StartingDayOfWeek.monday,
+      startingDayOfWeek: StartingDayOfWeek.sunday,
       calendarStyle: CalendarStyle(
-        selectedColor: Colors.deepOrange[400],
-        todayColor: Colors.deepOrange[200],
-        markersColor: Colors.brown[700],
-        outsideDaysVisible: false,
+        selectedColor: Colors.pink[700],
+        todayColor: Colors.blue[900],
+        markersColor: Colors.pink[900],
+        outsideDaysVisible: true,
       ),
       headerStyle: HeaderStyle(
         formatButtonTextStyle:
         TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
         formatButtonDecoration: BoxDecoration(
-          color: Colors.deepOrange[400],
+          color: Colors.pink[800],
           borderRadius: BorderRadius.circular(16.0),
         ),
       ),
