@@ -10,9 +10,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Calendrier Bouks',
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-      ),
+      //theme: ThemeData(
+       // primarySwatch: Colors.pink,
+     // ),
       home: HomePage(),
     );
   }
@@ -70,11 +70,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Colors.pink[800],
+        accentColor: Colors.deepPurple[200],
+      ),
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
+              indicatorColor: Colors.red,
               tabs: [
 
                 // Tab #1
@@ -110,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       headerStyle: HeaderStyle(
                         centerHeaderTitle: true,
                         formatButtonDecoration: BoxDecoration(
-                          color: Colors.orange,
+                          color: Colors.deepPurple[300],
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         formatButtonTextStyle: TextStyle(color: Colors.white),
@@ -138,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                             margin: const EdgeInsets.all(4.0),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                color: Colors.orange,
+                                color: Colors.purple[200],
                                 borderRadius: BorderRadius.circular(10.0)),
                             child: Text(
                               date.day.toString(),
