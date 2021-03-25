@@ -93,6 +93,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
     map.forEach((key, value) {
       newMap[key.toString()] = map[key];
     });
+    newMap.removeWhere((key, value) => key == null || value == null);
     return newMap;
   }
 
@@ -102,6 +103,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
     map.forEach((key, value) {
       newMap[DateTime.parse(key)] = map[key];
     });
+    newMap.removeWhere((key, value) => key == null || value == null);
     return newMap;
   }
 
@@ -217,8 +219,8 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
                             style: TextStyle(
                              color: Colors.pink),
                           ),
-                        )),
-
+                        )
+                    ),
 
                   ],
                 ),
