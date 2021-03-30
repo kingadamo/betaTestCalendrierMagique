@@ -4,9 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:splashscreen/splashscreen.dart';
 
+import './tab1.dart';
+import './tab2.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
+  // WIDGET BUILD---
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,7 +67,6 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
   TextEditingController _eventController;
   AnimationController _animationController;
   SharedPreferences prefs;
-
   @override
   void initState() {
     super.initState();
@@ -107,6 +111,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
     return newMap;
   }
 
+  // WIDGET BUILD ----------
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -137,97 +142,10 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
           body: TabBarView(
             children: [
               // Tab #1
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TableCalendar(
-                      events: _events,
-                      initialCalendarFormat: CalendarFormat.month,
-                      formatAnimation: FormatAnimation.slide,
-                      startingDayOfWeek: StartingDayOfWeek.sunday,
-                      calendarStyle: CalendarStyle(
-                          canEventMarkersOverflow: true,
-                          todayColor: Colors.orange,
-                          selectedColor: Theme.of(context).primaryColor,
-                          todayStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                              color: Colors.white)),
-                      headerStyle: HeaderStyle(
-                        centerHeaderTitle: true,
-                        formatButtonDecoration: BoxDecoration(
-                          color: Colors.deepPurple[300],
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        formatButtonTextStyle: TextStyle(color: Colors.white),
-                        formatButtonShowsNext: false,
-                      ),
-                      onDaySelected: (date, events, holidays) {
-                        setState(() {
-                          _selectedEvents = events;
-                        });
-                      },
-
-                      builders: CalendarBuilders(
-                          selectedDayBuilder: (context, date, events) => Container(
-                                  margin: const EdgeInsets.all(4.0),
-                                  padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-                                  color: Colors.deepOrange[300],
-                                  width: 100,
-                                  height: 100,
-                                  child: Text(
-                                    '${date.day}',
-                                    style: TextStyle().copyWith(fontSize: 16.0),
-                                  ),
-                              ),
-
-                          todayDayBuilder: (context, date, events) => Container(
-                                margin: const EdgeInsets.all(4.0),
-                                padding:
-                                    const EdgeInsets.only(top: 5.0, left: 6.0),
-                                color: Colors.red[100],
-                                width: 100,
-                                height: 100,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      '${date.day}',
-                                      style:
-                                          TextStyle().copyWith(fontSize: 16.0),
-                                    ),
-                                    Icon(
-                                      Icons.arrow_circle_down_rounded,
-                                      size: 20.0,
-                                    ),
-                                  ],
-                                ),
-                              )),
-
-
-                      calendarController: _controller,
-                    ),
-
-
-
-                    // Affichage en bas de la page
-                    ..._selectedEvents.map((event) => ListTile(
-                          title: Text('$event',
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                             color: Colors.pink),
-                          ),
-                        )
-                    ),
-
-                  ],
-                ),
-              ),
+              tab1(_events,_selectedEvents,_controller),
 
               // Tab #2
-              Icon(Icons.calendar_today),
+              tab2(),
 
               // Tab #3
               Icon(Icons.settings),
