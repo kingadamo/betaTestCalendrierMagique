@@ -4,13 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:splashscreen/splashscreen.dart';
 
-import './tab1.dart';
-import './tab2.dart';
+import './tabMonthCalendar.dart';
+import './tabPrincipal.dart';
+import './tabSettings.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   // WIDGET BUILD---
   @override
   Widget build(BuildContext context) {
@@ -67,6 +67,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
   TextEditingController _eventController;
   AnimationController _animationController;
   SharedPreferences prefs;
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +81,10 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
+  }
+
+  void _handleTabIndex() {
+    setState(() {});
   }
 
   // Méthode Init stockage de données via SharedPref
@@ -116,16 +121,16 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.pink[800],
-        accentColor: Colors.deepPurple[200],
+        brightness: Brightness.dark,
+        primaryColor: Color(0xFF04273D),
+        accentColor: Color(0xFF04273D),
       ),
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
-              indicatorColor: Colors.red,
+              indicatorColor: Color(0xFF0E86D4),
               tabs: [
                 // Tab #1
                 Tab(icon: Icon(Icons.home)),
@@ -142,16 +147,15 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
           body: TabBarView(
             children: [
               // Tab #1
-              tab1(_events,_selectedEvents,_controller),
+              tabPrincipal(),
 
               // Tab #2
-              tab2(),
+              tabMonthCalendar(_events, _selectedEvents, _controller),
 
               // Tab #3
-              Icon(Icons.settings),
+              tabSettings(),
             ],
           ),
-
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: _showAddDialog,
@@ -173,17 +177,20 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
                   child: Text("Save"),
                   onPressed: () {
                     if (_eventController.text.isEmpty) return;
-                    if (_events[_controller.selectedDay] != null) {
-                      _events[_controller.selectedDay]
-                          .add(_eventController.text);
-                    } else {
-                      _events[_controller.selectedDay] = [
-                        _eventController.text
-                      ];
-                    }
-                    prefs.setString("events", json.encode(encodeMap(_events)));
-                    _eventController.clear();
-                    Navigator.pop(context);
+                    setState(() {
+                      if (_events[_controller.selectedDay] != null) {
+                        _events[_controller.selectedDay]
+                            .add(_eventController.text);
+                      } else {
+                        _events[_controller.selectedDay] = [
+                          _eventController.text
+                        ];
+                      }
+                      prefs.setString(
+                          "events", json.encode(encodeMap(_events)));
+                      _eventController.clear();
+                      Navigator.pop(context);
+                    });
                   },
                 )
               ],
