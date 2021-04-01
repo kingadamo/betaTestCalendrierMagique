@@ -7,7 +7,7 @@ import 'package:splashscreen/splashscreen.dart';
 import './tabMonthCalendar.dart';
 import './tabPrincipal.dart';
 import './tabSettings.dart';
-
+import './pageAddEvent.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -147,7 +147,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
           body: TabBarView(
             children: [
               // Tab #1
-              tabPrincipal(),
+              tabPrincipal(_events, _selectedEvents, _controller),
 
               // Tab #2
               tabMonthCalendar(_events, _selectedEvents, _controller),
