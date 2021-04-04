@@ -1,13 +1,18 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:splashscreen/splashscreen.dart';
+import 'package:flutter_week_view/flutter_week_view.dart';
+import 'package:url_launcher/url_launcher.dart' as launcher;
 
 import './tabMonthCalendar.dart';
 import './tabPrincipal.dart';
 import './tabSettings.dart';
 import './pageAddEvent.dart';
+import './dayView.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -37,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new SplashScreen(
-        seconds: 5,
+        seconds: 2,
         navigateAfterSeconds: new AfterSplashPage(),
         title: new Text(
           'Bienvenue :)\nChargement en cours...',
@@ -67,7 +72,8 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
   TextEditingController _eventController;
   AnimationController _animationController;
   SharedPreferences prefs;
-
+  var eventsDetailled;
+  static var tabIndex;
   @override
   void initState() {
     super.initState();
@@ -75,7 +81,23 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
     _eventController = TextEditingController();
     _events = {};
     _selectedEvents = [];
+    tabIndex = 0;
     initPrefs();
+    eventsDetailled = [
+      FlutterWeekViewEvent(
+        title: 'Changer les pneus de la Tesla',
+        description: 'changement saisonnier',
+        start: DateTime.parse("2021-04-04 20:18:00Z"),
+        end: DateTime.parse("2021-04-04 22:00:00Z"),
+      ),
+      FlutterWeekViewEvent(
+        title: 'Regarder Jojo<s bizarre adventure',
+        description: 'A description 2',
+        start: DateTime.parse("2021-04-04 21:30:00Z"),
+        end: DateTime.parse("2021-04-04 23:30:00Z"),
+        backgroundColor: Colors.green[800],
+      )
+    ];
 
     _animationController = AnimationController(
       vsync: this,
@@ -119,7 +141,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
   // WIDGET BUILD ----------
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return new MaterialApp(
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Color(0xFF04273D),
@@ -127,40 +149,47 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
       ),
       home: DefaultTabController(
         length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: TabBar(
-              indicatorColor: Color(0xFF0E86D4),
-              tabs: [
+        child: Builder(builder: (BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(
+              bottom: TabBar(
+                indicatorColor: Color(0xFF0E86D4),
+                tabs: [
+                  // Tab #1
+                  Tab(icon: Icon(Icons.home)),
+
+                  // Tab #2
+                  Tab(icon: Icon(Icons.calendar_today)),
+
+                  // Tab #3
+                  Tab(icon: Icon(Icons.settings)),
+                ],
+              ),
+              title: Text('Calendrier Bouks'),
+            ),
+            body: TabBarView(
+              children: [
                 // Tab #1
-                Tab(icon: Icon(Icons.home)),
+                tabPrincipal(
+                    _events, _selectedEvents, _controller, eventsDetailled),
 
                 // Tab #2
-                Tab(icon: Icon(Icons.calendar_today)),
+                tabMonthCalendar(_events, _selectedEvents, _controller),
 
                 // Tab #3
-                Tab(icon: Icon(Icons.settings)),
+                tabSettings(),
               ],
             ),
-            title: Text('Calendrier Bouks'),
-          ),
-          body: TabBarView(
-            children: [
-              // Tab #1
-              tabPrincipal(_events, _selectedEvents, _controller),
-
-              // Tab #2
-              tabMonthCalendar(_events, _selectedEvents, _controller),
-
-              // Tab #3
-              tabSettings(),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: _showAddDialog,
-          ),
-        ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                tabIndex = DefaultTabController.of(context).index;
+                _showAddDialog();
+                print(tabIndex);
+              },
+            ),
+          );
+        }),
       ),
     );
   }
@@ -174,29 +203,50 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
               ),
               actions: <Widget>[
                 FlatButton(
-                  child: Text("Save"),
+                    onPressed: () {
+                      setState(() {
+                        Navigator.pop(context, false);
+                      });
+                    },
+                    child: Text("Annuler")),
+                FlatButton(
+                  child: Text("Sauvegarder"),
                   onPressed: () {
-                    if (_eventController.text.isEmpty) return;
-                    setState(() {
-                      if (_events[_controller.selectedDay] != null) {
-                        _events[_controller.selectedDay]
-                            .add(_eventController.text);
-                      } else {
-                        _events[_controller.selectedDay] = [
-                          _eventController.text
-                        ];
+                    if (tabIndex == 0) {
+                      print(tabIndex);
+                    } else if (tabIndex == 1) {
+                      if (_eventController.text.isEmpty) {
+                        print('0');
+                        print(_controller.selectedDay);
+                        return;
                       }
-                      prefs.setString(
-                          "events", json.encode(encodeMap(_events)));
-                      _eventController.clear();
-                      Navigator.pop(context);
-                    });
+                      setState(() {
+                        if (_events[_controller.selectedDay] != null) {
+                          print('1');
+                          _events[_controller.selectedDay]
+                              .add(_eventController.text);
+                        } else {
+                          _events[_controller.selectedDay] = [
+                            _eventController.text
+                          ];
+                          print('2');
+                        }
+                        prefs.setString(
+                            "events", json.encode(encodeMap(_events)));
+                        _eventController.clear();
+                        Navigator.pop(context, true);
+                      });
+                    } else if (tabIndex == 2) {
+                      print(tabIndex);
+                    }
                   },
                 )
               ],
             ));
-    setState(() {
-      _selectedEvents = _events[_controller.selectedDay];
-    });
+    //if (tabIndex == 1) {
+    //  setState(() {
+    //    _selectedEvents = _events[_controller.selectedDay];
+    //  });
+    //}
   }
 }

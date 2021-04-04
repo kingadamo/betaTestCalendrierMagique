@@ -21,7 +21,9 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  shared_preferences: ^0.5.4+5
+  date_format: ^2.0.2
+  url_launcher: ^6.0.2
+  shared_preferences: ^2.0.5
   table_calendar: ^2.3.3
   flutter:
     sdk: flutter
@@ -37,6 +39,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons:
+  flutter_week_view:
+
 
 flutter_icons:
   android: true

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import './main.dart';
 
 class tabMonthCalendar extends StatefulWidget {
   var events = {};
@@ -16,7 +17,6 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
   var selectedEvents = [];
   var controller = CalendarController();
   _tabMonthCalendarState(this.events, this.selectedEvents, this.controller);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,11 +57,10 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
                     todayStyle: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
-                        color: Colors.white
-                    )
-                ),
+                        color: Colors.white)),
                 headerStyle: HeaderStyle(
-                  headerMargin: EdgeInsets.only(top: 15, bottom: 20, left: 2,right: 2),
+                  headerMargin:
+                      EdgeInsets.only(top: 15, bottom: 20, left: 2, right: 2),
                   centerHeaderTitle: true,
                   // DECO COULEURS
                   decoration: BoxDecoration(
@@ -151,17 +150,19 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
             ),
 
             // Affichage en bas de la page
+
             ...selectedEvents.map((event) => ListTile(
-                  title: Text(
-                    '$event',
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                    ),
+                title: Text(
+                  '$event',
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
                   ),
-                )),
+                ),
+              ),
+            ),
           ],
         ),
       ),
