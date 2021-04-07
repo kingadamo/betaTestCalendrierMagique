@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Calendrier Bouks',
+      title: 'Planr',
       //theme: ThemeData(
       // primarySwatch: Colors.pink,
       // ),
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: 25, color: Colors.white),
         ),
-        image: new Image.asset('assets/images/dogecoin.png'),
+        image: new Image.asset('assets/icons/logotextonly.png'),
         //backgroundColor: Colors.white,
 
         gradientBackground: LinearGradient(
@@ -60,7 +60,13 @@ class _HomePageState extends State<HomePage> {
           colors: [const Color(0xFF0E86D4), const Color(0xFF800028)],
         ),
         styleTextUnderTheLoader: new TextStyle(),
-        photoSize: 50.0,
+        loadingText: new Text('Ichi byou keika - Ni byou keika...',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontStyle: FontStyle.italic, fontSize: 15, color: Colors.grey[300]
+          ),
+        ),
+        photoSize: 80.0,
         loaderColor: Colors.indigo[500]);
   }
 }
@@ -72,7 +78,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
   TextEditingController _eventController;
   AnimationController _animationController;
   SharedPreferences prefs;
-  var eventsDetailled;
+  static var eventsDetailled;
   static var tabIndex;
   @override
   void initState() {
@@ -144,7 +150,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
     return new MaterialApp(
       theme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: Color(0xFF04273D),
+        primaryColor: Color(0xFF001227),
         accentColor: Color(0xFF04273D),
       ),
       home: DefaultTabController(
@@ -165,7 +171,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
                   Tab(icon: Icon(Icons.settings)),
                 ],
               ),
-              title: Text('Calendrier Bouks'),
+              title: Image.asset('assets/icons/logotextonly.png', width: 90, height: 40, fit: BoxFit.scaleDown),
             ),
             body: TabBarView(
               children: [

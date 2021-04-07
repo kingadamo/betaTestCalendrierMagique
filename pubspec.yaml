@@ -45,7 +45,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icons/icon.png"
+  image_path: "assets/icons/foreground.png"
   adaptive_icon_background: "assets/icons/background.png"
   adaptive_icon_foreground: "assets/icons/foreground.png"
 
@@ -66,6 +66,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
       - assets/images/
+      - assets/icons/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
