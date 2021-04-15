@@ -60,11 +60,13 @@ class _HomePageState extends State<HomePage> {
           colors: [const Color(0xFF0E86D4), const Color(0xFF800028)],
         ),
         styleTextUnderTheLoader: new TextStyle(),
-        loadingText: new Text('Ichi byou keika - Ni byou keika...',
+        loadingText: new Text(
+          'Ichi byou keika - Ni byou keika...',
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontStyle: FontStyle.italic, fontSize: 15, color: Colors.grey[300]
-          ),
+              fontStyle: FontStyle.italic,
+              fontSize: 15,
+              color: Colors.grey[300]),
         ),
         photoSize: 80.0,
         loaderColor: Colors.indigo[500]);
@@ -93,17 +95,25 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
       FlutterWeekViewEvent(
         title: 'Changer les pneus de la Tesla',
         description: 'changement saisonnier',
-        start: DateTime.parse("2021-04-04 20:18:00Z"),
-        end: DateTime.parse("2021-04-04 22:00:00Z"),
+        start: DateTime.parse("2021-04-15 20:18:00Z"),
+        end: DateTime.parse("2021-04-15 22:00:00Z"),
       ),
       FlutterWeekViewEvent(
         title: 'Regarder Jojo<s bizarre adventure',
         description: 'A description 2',
-        start: DateTime.parse("2021-04-04 21:30:00Z"),
-        end: DateTime.parse("2021-04-04 23:30:00Z"),
+        start: DateTime.parse("2021-04-15 21:30:00Z"),
+        end: DateTime.parse("2021-04-15 23:30:00Z"),
         backgroundColor: Colors.green[800],
       )
     ];
+    eventsDetailled.add(FlutterWeekViewEvent(
+      title: 'BINKS',
+      description: 'A description 2',
+      start: DateTime.parse("2021-04-18 21:30:00Z"),
+      end: DateTime.parse("2021-04-18 23:30:00Z"),
+      backgroundColor: Colors.green[800],
+    ));
+    print(eventsDetailled[1].title);
 
     _animationController = AnimationController(
       vsync: this,
@@ -171,7 +181,8 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
                   Tab(icon: Icon(Icons.settings)),
                 ],
               ),
-              title: Image.asset('assets/icons/logotextonly.png', width: 90, height: 40, fit: BoxFit.scaleDown),
+              title: Image.asset('assets/icons/logotextonly.png',
+                  width: 90, height: 40, fit: BoxFit.scaleDown),
             ),
             body: TabBarView(
               children: [
@@ -229,14 +240,17 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
                       setState(() {
                         if (_events[_controller.selectedDay] != null) {
                           print('1');
-                          _events[_controller.selectedDay]
-                              .add(_eventController.text);
+                          _events[_controller.selectedDay].add(_eventController.text);
                         } else {
-                          _events[_controller.selectedDay] = [
-                            _eventController.text
-                          ];
+                          _events[_controller.selectedDay] = [_eventController.text];
+                          _events[DateTime.utc(eventsDetailled[1].start.year, eventsDetailled[1].start.month,eventsDetailled[1].start.day, 12, 00,00)] = [_eventController.text];
+
                           print('2');
                         }
+                        print('dsadasds');
+                        print(_controller.selectedDay);
+                        print(DateTime.utc(eventsDetailled[1].start.year, eventsDetailled[1].start.month,eventsDetailled[1].start.day, 12, 00,00));
+
                         prefs.setString(
                             "events", json.encode(encodeMap(_events)));
                         _eventController.clear();

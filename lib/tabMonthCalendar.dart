@@ -68,20 +68,14 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment(0.0, 7),
-                      colors: [
-                        const Color(0xFFCF000F),
-                        const Color(0xFF450005)
-                      ],
+                      colors: [const Color(0xFFCF000F), const Color(0xFF450005)],
                     ),
                   ),
                   formatButtonDecoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment(0.0, 2),
-                      colors: [
-                        const Color(0xFF0E86D4),
-                        const Color(0xFF074166)
-                      ],
+                      colors: [const Color(0xFF0E86D4), const Color(0xFF074166)],
                     ),
                     borderRadius: BorderRadius.circular(20.0),
                   ),
@@ -101,10 +95,7 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [
-                                const Color(0xFF0E86D4),
-                                const Color(0xFF450005)
-                              ],
+                              colors: [const Color(0xFF0E86D4), const Color(0xFF450005)],
                             ),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -122,10 +113,7 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [
-                                const Color(0xFF002969),
-                                const Color(0xFF450005)
-                              ],
+                              colors: [const Color(0xFF002969), const Color(0xFF450005)],
                             ),
                             borderRadius: BorderRadius.circular(5.0),
                           ),

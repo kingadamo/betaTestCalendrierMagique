@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -18,17 +19,17 @@ class _pageAddEventState extends State<pageAddEvent> {
   var _selectedEvents = [];
   var _controller = CalendarController();
   _pageAddEventState();
-
   final _formKey = GlobalKey<FormState>();
 
-  String dropdownValue = 'One';
+  String dropdownValue = 'Examen (4 séances)';
+
   final List<String> _autoOptionsNom = <String>[
     'Examen de ',
     'Travail de ',
     'Laboratoire de ',
     'Rédaction de ',
   ];
-String userTaskName;
+  String userTaskName;
 
   Widget build(BuildContext context) {
     return Container(
@@ -57,7 +58,10 @@ String userTaskName;
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment(0.0, 2),
-                        colors: [const Color(0xFF04273D), const Color(0xFF0E86D4)],
+                        colors: [
+                          const Color(0xFF04273D),
+                          const Color(0xFF0E86D4)
+                        ],
                         //colors: [ const Color(0xFF0E86D4), const Color(0xFF04273D)],
                       ),
                       border: Border.all(
@@ -66,9 +70,9 @@ String userTaskName;
                       ),
                     ),
                     width: MediaQuery.of(context).size.width - 10,
-                    height: 120,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     child: Form(
-                      key:_formKey,
+                      key: _formKey,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,44 +82,28 @@ String userTaskName;
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Container(
-                                    margin: const EdgeInsets.all(10),
+                                    margin: const EdgeInsets.only(
+                                        top: 30.0,
+                                        left: 10,
+                                        bottom: 30.0,
+                                        right: 10),
                                     //padding: const EdgeInsets.only(top: 5.0, left: 6.0),
                                     child: Text(
                                       'Nom de tâche :',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(fontSize: 16),
-                                    )
-                                ),
+                                    )),
                                 Container(
-                                 width:150,
+                                  width: MediaQuery.of(context).size.width / 2,
                                   child: TextFormField(
-                                    autofillHints: [AutofillHints.name],
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'This field is required';
+                                      }
+                                    },
                                     decoration: InputDecoration(
                                       hintText: 'Name',
                                     ),
-                                  ),
-                                ),
-
-                                Container(
-                                  color: Color(0xFF04273D),
-                                  width: 200,
-                                  child: Autocomplete(
-                                    optionsBuilder: (TextEditingValue textEditingValue) {
-                                      if (textEditingValue.text == '') {
-                                        return const Iterable<String>.empty();
-                                      }
-                                      userTaskName = textEditingValue.text;
-                                      return _autoOptionsNom.where((String option) {
-                                        //Edit les majuscules
-                                        return option.toLowerCase().contains(
-                                            textEditingValue.text.toLowerCase());
-                                      });
-                                    },
-                                    onSelected: (String selection) {
-                                      print('Valeur pre-choisis :  $selection');
-                                      print(userTaskName);
-                                    },
-
                                   ),
                                 ),
                               ],
@@ -134,16 +122,15 @@ String userTaskName;
                                     )),
                                 Container(
                                   color: Color(0xFF04273D),
-                                  width: 200,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
                                   child: DropdownButton<String>(
                                     value: dropdownValue,
                                     icon: Icon(Icons.arrow_downward),
                                     iconSize: 24,
                                     elevation: 16,
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.blueGrey
-                                    ),
+                                        fontSize: 16, color: Colors.blueGrey),
                                     underline: Container(
                                       height: 2,
                                       color: Colors.white,
@@ -153,21 +140,89 @@ String userTaskName;
                                         dropdownValue = newValue;
                                       });
                                     },
-                                    items: <String>['One', 'Two', 'Three', 'Four']
-                                        .map<DropdownMenuItem<String>>((String value) {
+                                    items: <String>[
+                                      'Examen (4 séances)',
+                                      'Examen (7 séances)',
+                                      'Travail (1 séance)',
+                                      'Travail (2 séances)',
+                                      "Lecture Livre (14 séances)"
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(value),
                                       );
-                                    })
-                                        .toList(),
+                                    }).toList(),
                                   ),
                                 ),
                               ],
                             ),
-
-                          ]
-                      ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                    margin: const EdgeInsets.all(10),
+                                    //padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+                                    child: Text(
+                                      'Durée Totale :',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(fontSize: 16),
+                                    )),
+                                Container(
+                                  color: Color(0xFF001227),
+                                  child: IconButton(
+                                      icon: Icon(Icons.access_alarm_rounded),
+                                      onPressed: () {
+                                        print('timer');
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return SimpleDialog(
+                                              backgroundColor:
+                                                  Color(0xFF001227),
+                                              title: Center(
+                                                  child: Text('Selectionner une durée')),
+                                              children: [
+                                                Center(
+                                                  child: SizedBox(
+                                                    width: MediaQuery.of(context).size.width - 10,
+                                                    height: MediaQuery.of(context).size.height * 0.3,
+                                                    child: CupertinoTimerPicker(
+                                                      onTimerDurationChanged: (value) {
+                                                        print(value.toString());
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                        child: Text(
+                                                          'Annuler',
+                                                          style: TextStyle(color: Colors.red),
+                                                        )),
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          // Todo save the selected duration to the ViewModel
+                                                          Navigator.pop(context);
+                                                        },
+                                                        child: Text('Soumettre')),
+                                                  ],
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                )
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }),
+                                ),
+                              ],
+                            ),
+                          ]),
                     ),
                   ),
                   Container(
@@ -175,7 +230,10 @@ String userTaskName;
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment(0.0, 2),
-                        colors: [const Color(0xFFCF000F), const Color(0xFF450005)],
+                        colors: [
+                          const Color(0xFFCF000F),
+                          const Color(0xFF450005)
+                        ],
                         //colors: [ const Color(0xFF0E86D4), const Color(0xFF04273D)],
                       ),
                     ),

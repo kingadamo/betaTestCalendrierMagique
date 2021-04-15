@@ -54,10 +54,7 @@ class _tabPrincipalState extends State<tabPrincipal> {
             alignment: Alignment.center,
             child: RaisedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => pageAddEvent()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => pageAddEvent()),);
                 setState(() {
                   txt = 'FlatButton tapped';
                   print(txt);
@@ -70,16 +67,13 @@ class _tabPrincipalState extends State<tabPrincipal> {
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                       // colors: [Color(0xff374ABE), Color(0xff64B6FF)],
-                      colors: [
-                        const Color(0xFFCF000F),
-                        const Color(0xFF450005)
-                      ],
+                      colors: [const Color(0xFFCF000F), const Color(0xFF450005)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
                     borderRadius: BorderRadius.circular(30.0)),
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*0.8, minHeight: 50.0),
                   alignment: Alignment.center,
                   child: Text(
                     "Planifier une tâche",
@@ -118,7 +112,7 @@ class _tabPrincipalState extends State<tabPrincipal> {
                     ),
                     borderRadius: BorderRadius.circular(30.0)),
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*0.8, minHeight: 50.0),
                   alignment: Alignment.center,
                   child: Text(
                     "Bouton inutile",
