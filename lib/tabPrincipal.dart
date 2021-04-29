@@ -103,10 +103,7 @@ class _tabPrincipalState extends State<tabPrincipal> {
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                       // colors: [Color(0xff374ABE), Color(0xff64B6FF)],
-                      colors: [
-                        const Color(0xFFCF000F),
-                        const Color(0xFF450005)
-                      ],
+                      colors: [const Color(0xFFCF000F), const Color(0xFF450005)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),

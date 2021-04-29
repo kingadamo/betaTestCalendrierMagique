@@ -95,22 +95,28 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
       FlutterWeekViewEvent(
         title: 'Changer les pneus de la Tesla',
         description: 'changement saisonnier',
-        start: DateTime.parse("2021-04-15 20:18:00Z"),
-        end: DateTime.parse("2021-04-15 22:00:00Z"),
+        start: DateTime.parse("2021-04-29 20:18:00Z"),
+        end: DateTime.parse("2021-04-29 22:00:00Z"),
       ),
       FlutterWeekViewEvent(
         title: 'Regarder Jojo<s bizarre adventure',
         description: 'A description 2',
-        start: DateTime.parse("2021-04-15 21:30:00Z"),
-        end: DateTime.parse("2021-04-15 23:30:00Z"),
+        start: DateTime.parse("2021-04-29 21:30:00Z"),
+        end: DateTime.parse("2021-04-29 23:30:00Z"),
         backgroundColor: Colors.green[800],
       )
     ];
     eventsDetailled.add(FlutterWeekViewEvent(
+      title: 'mada',
+      description: 'changement saisonnier',
+      start: DateTime.parse("2021-04-28 20:18:00Z"),
+      end: DateTime.parse("2021-04-28 22:00:00Z"),
+    ));
+    eventsDetailled.add(FlutterWeekViewEvent(
       title: 'BINKS',
       description: 'A description 2',
-      start: DateTime.parse("2021-04-18 21:30:00Z"),
-      end: DateTime.parse("2021-04-18 23:30:00Z"),
+      start: DateTime.parse("2021-04-29 21:30:00Z"),
+      end: DateTime.parse("2021-04-29 23:30:00Z"),
       backgroundColor: Colors.green[800],
     ));
     print(eventsDetailled[1].title);
@@ -132,6 +138,7 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
       _events = Map<DateTime, List<dynamic>>.from(
           decodeMap(json.decode(prefs.getString("events") ?? "{}")));
     });
+    _convertDayCalendarToMonthCalendar();
   }
 
   // Encodage Map
@@ -211,6 +218,48 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
     );
   }
 
+  _convertDayCalendarToMonthCalendar() {
+    int numberOfEvents = eventsDetailled.length;
+    setState(() {
+      for (var i = 0; i < numberOfEvents; i++) {
+        if (_events[DateTime.utc(eventsDetailled[i].start.year, eventsDetailled[i].start.month, eventsDetailled[i].start.day, 12, 00, 00)] != null) {
+          _events[DateTime.utc(
+                  eventsDetailled[i].start.year,
+                  eventsDetailled[i].start.month,
+                  eventsDetailled[i].start.day,
+                  12,
+                  00,
+                  00)]
+              .add(eventsDetailled[i].title);
+          //print("XXXXXXXXXXXXXXXXXS");
+        } else {
+          print("mon print:");
+          print(_events[eventsDetailled[i].start.day]);
+          print(i);
+          print(eventsDetailled[i].title);
+          print(DateTime.utc(
+              eventsDetailled[i].start.year,
+              eventsDetailled[i].start.month,
+              eventsDetailled[i].start.day,
+              12,
+              00,
+              00));
+          _events[DateTime.utc(
+              eventsDetailled[i].start.year,
+              eventsDetailled[i].start.month,
+              eventsDetailled[i].start.day,
+              12,
+              00,
+              00)] = [eventsDetailled[i].title];
+          // _events= {
+          //   DateTime.utc(eventsDetailled[i].start.year, eventsDetailled[i].start.month,eventsDetailled[i].start.day, 12, 00,00) : [eventsDetailled[i].title],
+          // };
+          print(_events);
+        }
+      }
+    });
+  }
+
   _showAddDialog() async {
     await showDialog(
         context: context,
@@ -240,16 +289,40 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
                       setState(() {
                         if (_events[_controller.selectedDay] != null) {
                           print('1');
-                          _events[_controller.selectedDay].add(_eventController.text);
+                          _events[_controller.selectedDay]
+                              .add(_eventController.text);
+                          _events[DateTime.utc(
+                                  eventsDetailled[1].start.year,
+                                  eventsDetailled[1].start.month,
+                                  eventsDetailled[1].start.day,
+                                  12,
+                                  00,
+                                  00)]
+                              .add(_eventController.text);
                         } else {
-                          _events[_controller.selectedDay] = [_eventController.text];
-                          _events[DateTime.utc(eventsDetailled[1].start.year, eventsDetailled[1].start.month,eventsDetailled[1].start.day, 12, 00,00)] = [_eventController.text];
+                          _events[_controller.selectedDay] = [
+                            _eventController.text
+                          ];
+                          _events[DateTime.utc(
+                              eventsDetailled[1].start.year,
+                              eventsDetailled[1].start.month,
+                              eventsDetailled[1].start.day,
+                              12,
+                              00,
+                              00)] = [_eventController.text];
 
                           print('2');
                         }
-                        print('dsadasds');
-                        print(_controller.selectedDay);
-                        print(DateTime.utc(eventsDetailled[1].start.year, eventsDetailled[1].start.month,eventsDetailled[1].start.day, 12, 00,00));
+                        //print('dsadasds');
+                        //print(_events[_controller.selectedDay]);
+                        //print(_controller.selectedDay);
+                        print(DateTime.utc(
+                            eventsDetailled[1].start.year,
+                            eventsDetailled[1].start.month,
+                            eventsDetailled[1].start.day,
+                            12,
+                            00,
+                            00));
 
                         prefs.setString(
                             "events", json.encode(encodeMap(_events)));
