@@ -24,6 +24,11 @@ class _pageAddEventState extends State<pageAddEvent> {
   String dropdownValue = 'Examen (4 séances)';
   String dureeTotaleString = "0";
   var dureeTotale;
+  String nameTache;
+  String nombreSeance;
+  String descriptionTache;
+
+
 
   final List<String> _autoOptionsNom = <String>[
     'Examen de ',
@@ -98,6 +103,9 @@ class _pageAddEventState extends State<pageAddEvent> {
                                 Container(
                                   width: MediaQuery.of(context).size.width / 2,
                                   child: TextFormField(
+                                    onSaved: (String value) {
+                                      nameTache = value;
+                                    },
                                     validator: (value) {
                                       if (value.isEmpty) {
                                         return 'Ce champs est requis';
@@ -105,6 +113,7 @@ class _pageAddEventState extends State<pageAddEvent> {
                                     },
                                     decoration: InputDecoration(
                                       hintText: 'Name',
+                                      labelText: 'Entrer un nom de tache',
                                     ),
                                   ),
                                 ),
@@ -127,6 +136,9 @@ class _pageAddEventState extends State<pageAddEvent> {
                                   margin: const EdgeInsets.only(
                                       bottom: 5.0, left: 10),
                                   child: TextFormField(
+                                    onSaved: (String value) {
+                                      descriptionTache = value;
+                                    },
                                     validator: (value) {
                                       if (value.isEmpty) {
                                         return 'Ce champs est requis';
@@ -135,7 +147,7 @@ class _pageAddEventState extends State<pageAddEvent> {
 
                                     decoration: InputDecoration(
                                       hintText: 'Description',
-
+                                      labelText: 'Entrer une description de tache',
                                     ),
                                   ),
                                 ),
@@ -210,6 +222,9 @@ class _pageAddEventState extends State<pageAddEvent> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.20,
                                   child: TextFormField(
+                                    onSaved: (String value) {
+                                      nombreSeance = value;
+                                    },
                                     keyboardType: TextInputType.number,
                                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                     validator: (value) {
@@ -219,6 +234,7 @@ class _pageAddEventState extends State<pageAddEvent> {
                                     },
                                     decoration: InputDecoration(
                                       hintText: 'Nombre',
+                                      labelText: 'Nombre',
                                     ),
                                   ),
                                 ),
@@ -273,8 +289,7 @@ class _pageAddEventState extends State<pageAddEvent> {
                                                           (value) {
                                                         print(value.toString());
                                                         setState(() {
-                                                          dureeTotaleString =
-                                                              value.toString();
+                                                          dureeTotaleString = value.toString();
                                                           dureeTotale = value;
                                                         });
                                                       },
@@ -300,8 +315,7 @@ class _pageAddEventState extends State<pageAddEvent> {
                                                           Navigator.pop(
                                                               context);
                                                         },
-                                                        child:
-                                                            Text('Soumettre')),
+                                                        child: Text('Soumettre')),
                                                   ],
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -329,29 +343,29 @@ class _pageAddEventState extends State<pageAddEvent> {
                                     )),
                                 Container(
                                     child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Text(
-                                        "${selectedDate.toLocal()}"
-                                            .split(' ')[0],
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[0]),
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                      Container(
+                                        child: Text(
+                                          "${selectedDate.toLocal()}"
+                                              .split(' ')[0],
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey[0]),
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 0.0,
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 10.0),
-                                      color: Colors.blue[700],
-                                      child: IconButton(
-                                        icon: Icon(Icons.calendar_today_sharp),
-                                        onPressed: () => _selectDate(context),
-                                        color: Colors.white,
+                                      SizedBox(
+                                        height: 0.0,
                                       ),
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 10.0),
+                                        color: Colors.blue[700],
+                                        child: IconButton(
+                                          icon: Icon(Icons.calendar_today_sharp),
+                                          onPressed: () => _selectDate(context),
+                                          color: Colors.white,
+                                        ),
                                     ),
                                   ],
                                 )),
@@ -371,7 +385,6 @@ class _pageAddEventState extends State<pageAddEvent> {
                                 onPressed: () {
                                   //returns true if the form is valid, or false if otherwise.
                                   if (_formKey.currentState.validate()) {
-
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(content: Text('Processing Data (correct!)')));
                                   }
