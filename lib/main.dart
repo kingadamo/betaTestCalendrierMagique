@@ -7,6 +7,7 @@ import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter_week_view/flutter_week_view.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
 
+import 'package:numberpicker/numberpicker.dart';
 import './tabMonthCalendar.dart';
 import './tabPrincipal.dart';
 import './tabSettings.dart';
@@ -115,8 +116,8 @@ class AfterSplash extends State<AfterSplashPage> with TickerProviderStateMixin {
     eventsDetailled.add(FlutterWeekViewEvent(
       title: 'BINKS',
       description: 'A description 2',
-      start: DateTime.parse("2021-04-29 21:30:00Z"),
-      end: DateTime.parse("2021-04-29 23:30:00Z"),
+      start: DateTime.parse("2021-05-06 21:30:00Z"),
+      end: DateTime.parse("2021-05-06 23:30:00Z"),
       backgroundColor: Colors.green[800],
     ));
     print(eventsDetailled[1].title);

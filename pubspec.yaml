@@ -25,6 +25,7 @@ dependencies:
   url_launcher: ^6.0.2
   shared_preferences: ^2.0.5
   table_calendar: ^2.3.3
+  numberpicker: ^2.0.1
   flutter:
     sdk: flutter
 

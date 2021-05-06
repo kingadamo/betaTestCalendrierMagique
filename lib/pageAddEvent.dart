@@ -1,8 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter/services.dart';
 
 class pageAddEvent extends StatefulWidget {
   var _events = {};
@@ -20,8 +20,10 @@ class _pageAddEventState extends State<pageAddEvent> {
   var _controller = CalendarController();
   _pageAddEventState();
   final _formKey = GlobalKey<FormState>();
-
+  DateTime selectedDate = DateTime.now();
   String dropdownValue = 'Examen (4 séances)';
+  String dureeTotaleString = "0";
+  var dureeTotale;
 
   final List<String> _autoOptionsNom = <String>[
     'Examen de ',
@@ -83,9 +85,9 @@ class _pageAddEventState extends State<pageAddEvent> {
                               children: <Widget>[
                                 Container(
                                     margin: const EdgeInsets.only(
-                                        top: 30.0,
+                                        top: 10.0,
                                         left: 10,
-                                        bottom: 30.0,
+                                        bottom: 10.0,
                                         right: 10),
                                     //padding: const EdgeInsets.only(top: 5.0, left: 6.0),
                                     child: Text(
@@ -98,11 +100,42 @@ class _pageAddEventState extends State<pageAddEvent> {
                                   child: TextFormField(
                                     validator: (value) {
                                       if (value.isEmpty) {
-                                        return 'This field is required';
+                                        return 'Ce champs est requis';
                                       }
                                     },
                                     decoration: InputDecoration(
                                       hintText: 'Name',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                    margin: const EdgeInsets.only(bottom: 5.0),
+                                    //padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+                                    child: Text(
+                                      'Description :',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(fontSize: 16),
+                                    )),
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  margin: const EdgeInsets.only(
+                                      bottom: 5.0, left: 10),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Ce champs est requis';
+                                      }
+                                    },
+
+                                    decoration: InputDecoration(
+                                      hintText: 'Description',
+
                                     ),
                                   ),
                                 ),
@@ -121,7 +154,6 @@ class _pageAddEventState extends State<pageAddEvent> {
                                       style: TextStyle(fontSize: 16),
                                     )),
                                 Container(
-                                  color: Color(0xFF04273D),
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
                                   child: DropdownButton<String>(
@@ -130,7 +162,8 @@ class _pageAddEventState extends State<pageAddEvent> {
                                     iconSize: 24,
                                     elevation: 16,
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.blueGrey),
+                                        fontSize: 16,
+                                        color: Colors.blueGrey[200]),
                                     underline: Container(
                                       height: 2,
                                       color: Colors.white,
@@ -162,6 +195,40 @@ class _pageAddEventState extends State<pageAddEvent> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Container(
+                                    margin: const EdgeInsets.only(
+                                        top: 10.0,
+                                        left: 10,
+                                        bottom: 10.0,
+                                        right: 10),
+                                    //padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+                                    child: Text(
+                                      "Nombre de séances :",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(fontSize: 16),
+                                    )),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.20,
+                                  child: TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Ce champs est requis';
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Nombre',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
                                     margin: const EdgeInsets.all(10),
                                     //padding: const EdgeInsets.only(top: 5.0, left: 6.0),
                                     child: Text(
@@ -170,7 +237,17 @@ class _pageAddEventState extends State<pageAddEvent> {
                                       style: TextStyle(fontSize: 16),
                                     )),
                                 Container(
-                                  color: Color(0xFF001227),
+                                  child: Text(
+                                    "${dureeTotaleString}",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[0]),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(left: 10.0),
+                                  color: Colors.blue[700],
                                   child: IconButton(
                                       icon: Icon(Icons.access_alarm_rounded),
                                       onPressed: () {
@@ -182,15 +259,24 @@ class _pageAddEventState extends State<pageAddEvent> {
                                               backgroundColor:
                                                   Color(0xFF001227),
                                               title: Center(
-                                                  child: Text('Selectionner une durée')),
+                                                  child: Text(
+                                                      'Selectionner une durée')),
                                               children: [
                                                 Center(
                                                   child: SizedBox(
-                                                    width: MediaQuery.of(context).size.width - 10,
-                                                    height: MediaQuery.of(context).size.height * 0.3,
+                                                    width:
+                                                        MediaQuery.of(context).size.width - 10,
+                                                    height:
+                                                        MediaQuery.of(context).size.height * 0.3,
                                                     child: CupertinoTimerPicker(
-                                                      onTimerDurationChanged: (value) {
+                                                      onTimerDurationChanged:
+                                                          (value) {
                                                         print(value.toString());
+                                                        setState(() {
+                                                          dureeTotaleString =
+                                                              value.toString();
+                                                          dureeTotale = value;
+                                                        });
                                                       },
                                                     ),
                                                   ),
@@ -199,20 +285,27 @@ class _pageAddEventState extends State<pageAddEvent> {
                                                   children: [
                                                     TextButton(
                                                         onPressed: () {
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         },
                                                         child: Text(
                                                           'Annuler',
-                                                          style: TextStyle(color: Colors.red),
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
                                                         )),
                                                     TextButton(
                                                         onPressed: () {
                                                           // Todo save the selected duration to the ViewModel
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         },
-                                                        child: Text('Soumettre')),
+                                                        child:
+                                                            Text('Soumettre')),
                                                   ],
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
                                                 )
                                               ],
                                             );
@@ -222,6 +315,70 @@ class _pageAddEventState extends State<pageAddEvent> {
                                 ),
                               ],
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                    margin: const EdgeInsets.all(10),
+                                    //padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+                                    child: Text(
+                                      'Date Limite :',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(fontSize: 16),
+                                    )),
+                                Container(
+                                    child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Text(
+                                        "${selectedDate.toLocal()}"
+                                            .split(' ')[0],
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[0]),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 0.0,
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 10.0),
+                                      color: Colors.blue[700],
+                                      child: IconButton(
+                                        icon: Icon(Icons.calendar_today_sharp),
+                                        onPressed: () => _selectDate(context),
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                              ],
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 20.0),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [const Color(0xFFCF000F), const Color(0xFF450005)],
+                                  //colors: [ const Color(0xFF0E86D4), const Color(0xFF04273D)],
+                                ),
+                              ),
+                              child: FlatButton(
+                                onPressed: () {
+                                  //returns true if the form is valid, or false if otherwise.
+                                  if (_formKey.currentState.validate()) {
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(content: Text('Processing Data (correct!)')));
+                                  }
+                                  },
+                                child: Text('Planifier'),
+                              ),
+                            ),
                           ]),
                     ),
                   ),
@@ -230,10 +387,7 @@ class _pageAddEventState extends State<pageAddEvent> {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment(0.0, 2),
-                        colors: [
-                          const Color(0xFFCF000F),
-                          const Color(0xFF450005)
-                        ],
+                        colors: [const Color(0xFFCF000F), const Color(0xFF450005)],
                         //colors: [ const Color(0xFF0E86D4), const Color(0xFF04273D)],
                       ),
                     ),
@@ -249,5 +403,18 @@ class _pageAddEventState extends State<pageAddEvent> {
         ),
       ),
     );
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, // Refer step 1
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 }
