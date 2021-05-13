@@ -49,7 +49,7 @@ class _dayViewState extends State<dayView> {
         inScrollableWidget: true,
         hoursColumnStyle: HoursColumnStyle(
             interval: Duration(minutes: 30),
-            textStyle: TextStyle(color: Colors.white, fontSize: 14),
+            textStyle: TextStyle(color: Colors.white, fontSize: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -72,7 +72,7 @@ class _dayViewState extends State<dayView> {
         style: DayViewStyle.fromDate(
           date: now,
           currentTimeCircleRadius: 8,
-          hourRowHeight: 50,
+          hourRowHeight: 150,
           headerSize: 25,
           backgroundRulesColor: Color(0xFF04273D),
           currentTimeRuleColor: Color(0xFF04273D),
