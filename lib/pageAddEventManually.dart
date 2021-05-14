@@ -7,6 +7,9 @@ import 'package:flutter_week_view/flutter_week_view.dart';
 import './main.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/services.dart';
+import './AfterSplashPage.dart';
+import 'main.dart';
+import './globals.dart' as globals;
 
 class pageAddEventManually extends StatefulWidget {
   var _events = {};
@@ -30,7 +33,7 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
   DateTime selectedDate = DateTime.now();
   String dropdownValue = 'Examen (4 séances)';
   String dureeTotaleString = "0";
-  var dureeTotale;
+  var dureeTotale = Duration(minutes: 0);
 
   final nameTacheController = TextEditingController();
   //final nombreSeanceController = TextEditingController();
@@ -169,7 +172,7 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
                     )),
                     Container(
                       child: Text(
-                        "${dureeTotaleString}",
+                        " ${dureeTotale.inMinutes} minutes",
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -287,7 +290,8 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
                             onPressed: () {
                               DatePicker.showDateTimePicker(context,
                                   showTitleActions: true,
-                                  minTime: DateTime.now().subtract(Duration(days: 14)),
+                                  minTime: DateTime.now()
+                                      .subtract(Duration(days: 14)),
                                   maxTime: DateTime(2050, 1, 1),
                                   onChanged: (date) {
                                 setState(() {
@@ -342,17 +346,22 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
                             ),
                           ),
                           onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text('Planification manuelle ajoutée (valide!)',)
-                              )
-                              );
-                              setState(() {
-                                ajoutEventDetailledManuel();
-                                Navigator.pop(context);
-                              });
-
+                            if (dureeTotale.inSeconds.toInt() >= 900) {
+                              if (_formKey.currentState.validate()) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                        content: Text(
+                                  'Planification manuelle ajoutée (valide!)',
+                                )));
+                                setState(() {
+                                  ajoutEventDetailledManuel();
+                                  Navigator.pop(context);
+                                });
+                              }
+                            } else{
+                              _showNotEnoughTimeDialog();
                             }
+
                             //Navigator.pop(context);
                           },
                         ),
@@ -381,16 +390,90 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
   void ajoutEventDetailledManuel() {
     var name = nameTacheController.text;
     var description = descriptionTacheController.text;
-setState(() {
-  AfterSplash.eventsDetailled.add(FlutterWeekViewEvent(
-    title: '$name',
-    description: '$description',
-    start: selectedDate,
-    end: selectedDate.add(dureeTotale),
-    backgroundColor:
-    Colors.primaries[Random().nextInt(Colors.primaries.length)],
-  ));
-});
+    setState(() {
+      globals.eventsDetailled.add(FlutterWeekViewEvent(
+        title: '$name',
+        description: '$description',
+        start: selectedDate,
+        end: selectedDate.add(dureeTotale),
+        backgroundColor:
+            Colors.primaries[Random().nextInt(Colors.primaries.length)],
+      ));
+      if (globals.events[DateTime.utc(selectedDate.year, selectedDate.month,
+              selectedDate.day, 12, 00, 00)] !=
+          null) {
+        globals.events[DateTime.utc(selectedDate.year, selectedDate.month,
+                selectedDate.day, 12, 00, 00)]
+            .add(name);
+      } else {
+        globals.events[DateTime.utc(selectedDate.year, selectedDate.month,
+            selectedDate.day, 12, 00, 00)] = [name];
+      }
+    });
+  }
 
+  _showNotEnoughTimeDialog() async {
+    await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content:
+                  Text("Les événements doivent durer au minimum 15 minutes."),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                )
+              ],
+            ));
+  }
+
+  _convertDayCalendarToMonthCalendar() {
+    int numberOfEvents = globals.eventsDetailled.length;
+    setState(() {
+      for (var i = 0; i < numberOfEvents; i++) {
+        if (globals.events[DateTime.utc(
+                globals.eventsDetailled[i].start.year,
+                globals.eventsDetailled[i].start.month,
+                globals.eventsDetailled[i].start.day,
+                12,
+                00,
+                00)] !=
+            null) {
+          globals.events[DateTime.utc(
+                  globals.eventsDetailled[i].start.year,
+                  globals.eventsDetailled[i].start.month,
+                  globals.eventsDetailled[i].start.day,
+                  12,
+                  00,
+                  00)]
+              .add(globals.eventsDetailled[i].title);
+        } else {
+          print("mon print:");
+          print(globals.events[globals.eventsDetailled[i].start.day]);
+          print(i);
+          print(globals.eventsDetailled[i].title);
+          print(DateTime.utc(
+              globals.eventsDetailled[i].start.year,
+              globals.eventsDetailled[i].start.month,
+              globals.eventsDetailled[i].start.day,
+              12,
+              00,
+              00));
+          globals.events[DateTime.utc(
+              globals.eventsDetailled[i].start.year,
+              globals.eventsDetailled[i].start.month,
+              globals.eventsDetailled[i].start.day,
+              12,
+              00,
+              00)] = [globals.eventsDetailled[i].title];
+          // globals.events= {
+          //   DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month,globals.eventsDetailled[i].start.day, 12, 00,00) : [globals.eventsDetailled[i].title],
+          // };
+          print(globals.events);
+        }
+      }
+    });
   }
 }
