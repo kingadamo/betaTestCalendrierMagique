@@ -1,0 +1,37 @@
+if(dureeTotal/nmbrSeance  < 15 minutes){
+AFFICHER(La durée par séance doit être supérieur à 15 minutes)
+}
+else{
+int dureeParSeance = dureeTotal/nmbrSeance;
+ int debutSeance = 8h;
+ int finSeance = debutSeance + dureeParSeance;
+ 
+ PARCOURIR LES EVENTS : 
+ if(dateEvent1 != dateEvent2){
+ dateEvent1 = dateEvent1;
+ }
+ else if(dateEvent1 == dateEvent2){
+ PARCOURIR LES SÉANCES :
+  if(debutSeance1 == debutSeance2){
+  debutSeance1 == finSeance2 + 20mins (pause);
+    if(finSeance1 > 20h){
+    dateEvent1 = dateEvent1 + 1jour;
+    }
+  }else if(finSeance1 < debutSeance2){}
+ 
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
