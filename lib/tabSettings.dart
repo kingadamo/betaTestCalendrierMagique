@@ -13,7 +13,6 @@ class tabSettings extends StatefulWidget{
   _tabSettingsState createState() => _tabSettingsState();
 }
 
-
 class _tabSettingsState extends State<tabSettings> {
   double _slider = 0.5;
   bool _switch = false;
@@ -80,6 +79,7 @@ class _tabSettingsState extends State<tabSettings> {
     );
   }
 
+  /// Fenetre pour afficher les credits
   _showCreateursDialog() async {
     await showDialog(
         context: context,
