@@ -35,7 +35,7 @@ int dureeParSeance = dureeTotal/nmbrSeance;
 En gros, l'algorithme sert a mettre des séances dans le calendrier. Pour ce faire, on met le début de chaque
 séance à 8h du matin et l'algorithme va parcourir toutes les évenements pour savoir si cet évenement peut 
 entrer dans cette journée ou non. Si deux évenement ont la même heure de début, l'algorithme va mettre le
-début d'un des deux après la fin de l'autre avec un 20 minutes de pause. Si la fin de cet évenement déoasse
+début d'un des deux après la fin de l'autre avec un 20 minutes de pause. Si la fin de cet évenement dépasse
 20h, cet évenement devra être remis au jour d'après. On a aussi mis d'autres conditions à respecter pour 
 être sur que cet évenement ne soit pas en même temps qu'un autre.
 
