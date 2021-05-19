@@ -445,6 +445,7 @@ class _pageAddEventState extends State<pageAddEvent> {
   }
 
   /// Algorithme de génération d'horaire
+  /// TODO : COMPLÉTER L'ALGORITHME À L'AIDE DU PSEUDO_CODE DANS LE GITHUB
   _generationHoraireAuto(BuildContext context) async{
     int dureeTotaleInt = dureeTotale.inMinutes.toInt();
     int nombreSeanceInt = int.parse(nombreSeanceController.text);
