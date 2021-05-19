@@ -1,4 +1,4 @@
-# Calendrier Magique
+# Planr (Anciennement _Calendrier Magique_)
 
 Un assitant personnel sous forme de calendrier en application mobile.
 
@@ -41,3 +41,4 @@ UPDATE: il est codé partiellement.
 
 ### Auteurs : 
 Mena Samir Kamal Abouseffien, Sophie Hajjar et Adam Qacha
+Planr 
