@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 
+/// Cette page sert à des fins de test
+///
 class pageRandom extends StatefulWidget {
-  var _events = {};
-  var _selectedEvents = [];
-  var _controller = CalendarController();
   pageRandom();
   @override
   _pageRandomState createState() => _pageRandomState();
 }
 
 class _pageRandomState extends State<pageRandom> {
-  var _events = {};
   var txt;
-  var _selectedEvents = [];
-  var _controller = CalendarController();
   _pageRandomState();
 
   Widget build(BuildContext context) {

@@ -1,26 +1,16 @@
 import 'dart:convert';
-import 'dart:math';
-import 'package:flutter/services.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_week_view/flutter_week_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:splashscreen/splashscreen.dart';
-import 'package:flutter_week_view/flutter_week_view.dart';
-import 'package:url_launcher/url_launcher.dart' as launcher;
-import 'dart:async';
 
-import 'package:after_layout/after_layout.dart';
-import 'package:flutter/foundation.dart';
-import 'package:introduction_screen/introduction_screen.dart';
-
-import 'package:numberpicker/numberpicker.dart';
+import './globals.dart' as globals;
+import './pageAddEventManually.dart';
 import './tabMonthCalendar.dart';
 import './tabPrincipal.dart';
 import './tabSettings.dart';
-import './pageAddEvent.dart';
-import './pageAddEventManually.dart';
-import './dayView.dart';
-import './globals.dart' as globals;
 
 class AfterSplashPage extends StatefulWidget {
   _AfterSplashPageState createState() => _AfterSplashPageState();
@@ -47,19 +37,18 @@ class _AfterSplashPageState extends State<AfterSplashPage> with TickerProviderSt
     initPrefs();
 
     globals.eventsDetailled.add(FlutterWeekViewEvent(
-      title: 'mada',
-      description: 'changement saisonnier',
-      start: DateTime.parse("2021-04-28 20:18:00Z"),
-      end: DateTime.parse("2021-04-28 22:00:00Z"),
+      title: 'Exemple Event',
+      description: 'Description Event 1',
+      start: DateTime.parse("2021-05-28 20:18:00Z"),
+      end: DateTime.parse("2021-05-28 22:00:00Z"),
     ));
     globals.eventsDetailled.add(FlutterWeekViewEvent(
-      title: 'BINKS',
-      description: 'A description 2',
-      start: DateTime.parse("2021-05-06 21:30:00Z"),
-      end: DateTime.parse("2021-05-06 23:30:00Z"),
+      title: 'Exemple Event 2',
+      description: 'Description event 2',
+      start: DateTime.parse("2021-05-18 21:30:00Z"),
+      end: DateTime.parse("2021-05-18 23:30:00Z"),
       backgroundColor: Colors.green[800],
     ));
-    print(globals.eventsDetailled[1].title);
 
     _animationController = AnimationController(
       vsync: this,
@@ -71,7 +60,7 @@ class _AfterSplashPageState extends State<AfterSplashPage> with TickerProviderSt
     setState(() {});
   }
 
-  // Méthode Init stockage de données via SharedPref
+  /// Méthode Init stockage de données via SharedPref
   initPrefs() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -81,7 +70,7 @@ class _AfterSplashPageState extends State<AfterSplashPage> with TickerProviderSt
     _convertDayCalendarToMonthCalendar();
   }
 
-  // Encodage Map
+  /// Encodage Map
   Map<String, dynamic> encodeMap(Map<DateTime, dynamic> map) {
     Map<String, dynamic> newMap = {};
     map.forEach((key, value) {
@@ -91,7 +80,7 @@ class _AfterSplashPageState extends State<AfterSplashPage> with TickerProviderSt
     return newMap;
   }
 
-  // Décodage map
+  /// Décodage map
   Map<DateTime, dynamic> decodeMap(Map<String, dynamic> map) {
     Map<DateTime, dynamic> newMap = {};
     map.forEach((key, value) {
@@ -101,7 +90,6 @@ class _AfterSplashPageState extends State<AfterSplashPage> with TickerProviderSt
     return newMap;
   }
 
-  // WIDGET BUILD ----------
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -149,13 +137,14 @@ class _AfterSplashPageState extends State<AfterSplashPage> with TickerProviderSt
               onPressed: () {
                 tabIndex = DefaultTabController.of(context).index;
                 showModalBottomSheet<void>(
+                  transitionAnimationController: AnimationController(duration: const Duration(milliseconds: 500), vsync: this),
                     context: context,
+                    isScrollControlled: true,
                     builder: (BuildContext context) {
                       return pageAddEventManually(_controller);
                     });
-                // Dialogue  pour ajouter un evenement dans le calendrier day type
+                // Dialogue  pour ajouter un evenement dans le calendrier day type (DISABLED)
                 //_showAddDialog();
-                print(tabIndex);
               },
             ),
           );
@@ -164,55 +153,24 @@ class _AfterSplashPageState extends State<AfterSplashPage> with TickerProviderSt
     );
   }
 
+ /// La méthode @_convertDayCalendarToMonthCalendar() sert à transférer les
+ /// événements contenus dans la matrice remplis de flutter_week_view events (vue quotidienne)
+ /// dans la matrice d'évenements table_calendar (vue mensuelle)
   _convertDayCalendarToMonthCalendar() {
     int numberOfEvents = globals.eventsDetailled.length;
     setState(() {
       for (var i = 0; i < numberOfEvents; i++) {
-        if (globals.events[DateTime.utc(
-            globals.eventsDetailled[i].start.year,
-            globals.eventsDetailled[i].start.month,
-            globals.eventsDetailled[i].start.day,
-            12,
-            00,
-            00)] !=
-            null) {
-          globals.events[DateTime.utc(
-              globals.eventsDetailled[i].start.year,
-              globals.eventsDetailled[i].start.month,
-              globals.eventsDetailled[i].start.day,
-              12,
-              00,
-              00)]
-              .add(globals.eventsDetailled[i].title);
-          //print("XXXXXXXXXXXXXXXXXS");
+        if (globals.events[DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month, globals.eventsDetailled[i].start.day, 12, 00, 00)] != null) {
+          globals.events[DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month, globals.eventsDetailled[i].start.day, 12, 00, 00)].add(globals.eventsDetailled[i].title);
         } else {
-          print("mon print:");
-          print(globals.events[globals.eventsDetailled[i].start.day]);
-          print(i);
-          print(globals.eventsDetailled[i].title);
-          print(DateTime.utc(
-              globals.eventsDetailled[i].start.year,
-              globals.eventsDetailled[i].start.month,
-              globals.eventsDetailled[i].start.day,
-              12,
-              00,
-              00));
-          globals.events[DateTime.utc(
-              globals.eventsDetailled[i].start.year,
-              globals.eventsDetailled[i].start.month,
-              globals.eventsDetailled[i].start.day,
-              12,
-              00,
-              00)] = [globals.eventsDetailled[i].title];
-          // globals.events= {
-          //   DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month,globals.eventsDetailled[i].start.day, 12, 00,00) : [globals.eventsDetailled[i].title],
-          // };
-          print(globals.events);
+          globals.events[DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month, globals.eventsDetailled[i].start.day, 12, 00, 00)] = [globals.eventsDetailled[i].title];
         }
       }
     });
   }
 
+ /// La méthode @_showAddDialog() sert afficher une fenetre qui permet d'ajouter
+ /// evenement dans le table_calendar (calendrier mensuel)
   _showAddDialog() async {
     await showDialog(
         context: context,
@@ -232,67 +190,24 @@ class _AfterSplashPageState extends State<AfterSplashPage> with TickerProviderSt
               child: Text("Sauvegarder"),
               onPressed: () {
                 if (tabIndex == 0) {
-                  print(tabIndex);
                 } else if (tabIndex == 1) {
-                  if (_eventController.text.isEmpty) {
-                    print('0');
-                    print(_controller.selectedDay);
-                    return;
-                  }
                   setState(() {
                     if (globals.events[_controller.selectedDay] != null) {
-                      print('1');
-                      globals.events[_controller.selectedDay]
-                          .add(_eventController.text);
-                      globals.events[DateTime.utc(
-                          globals.eventsDetailled[1].start.year,
-                          globals.eventsDetailled[1].start.month,
-                          globals.eventsDetailled[1].start.day,
-                          12,
-                          00,
-                          00)]
-                          .add(_eventController.text);
+                      globals.events[_controller.selectedDay].add(_eventController.text);
+                      globals.events[DateTime.utc(globals.eventsDetailled[1].start.year,globals.eventsDetailled[1].start.month,globals.eventsDetailled[1].start.day,12,00,00)].add(_eventController.text);
                     } else {
-                      globals.events[_controller.selectedDay] = [
-                        _eventController.text
-                      ];
-                      globals.events[DateTime.utc(
-                          globals.eventsDetailled[1].start.year,
-                          globals.eventsDetailled[1].start.month,
-                          globals.eventsDetailled[1].start.day,
-                          12,
-                          00,
-                          00)] = [_eventController.text];
-
-                      print('2');
+                      globals.events[_controller.selectedDay] = [_eventController.text];
+                      globals.events[DateTime.utc(globals.eventsDetailled[1].start.year,globals.eventsDetailled[1].start.month,globals.eventsDetailled[1].start.day,12,00,00)]= [_eventController.text];
                     }
-                    //print('dsadasds');
-                    //print(globals.events[_controller.selectedDay]);
-                    //print(_controller.selectedDay);
-                    print(DateTime.utc(
-                        globals.eventsDetailled[1].start.year,
-                        globals.eventsDetailled[1].start.month,
-                        globals.eventsDetailled[1].start.day,
-                        12,
-                        00,
-                        00));
-
-                    prefs.setString(
-                        "events", json.encode(encodeMap(globals.events)));
+                    prefs.setString("events", json.encode(encodeMap(globals.events)));
                     _eventController.clear();
                     Navigator.pop(context, true);
                   });
                 } else if (tabIndex == 2) {
-                  print(tabIndex);
                 }
               },
             )
           ],
         ));
-    //if (tabIndex == 1) {
-    //  setState(() {
-    //    _selectedEvents = globals.events[_controller.selectedDay];
-    //  });
-    //}
   }
 }

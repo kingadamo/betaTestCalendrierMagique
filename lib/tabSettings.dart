@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_week_view/flutter_week_view.dart';
-import 'package:url_launcher/url_launcher.dart' as launcher;
-
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+/// Le fichier @tabSettings sert à gérer les paramètres de l'utilisateur.
+/// Les préférences comme les couleurs, heures de travail, activités sportives etc
+/// pourraient être gérer ici dans le futur.
 
 class tabSettings extends StatefulWidget{
   tabSettings();
@@ -66,8 +67,14 @@ class _tabSettingsState extends State<tabSettings> {
             _showCreateursDialog();
           }),
           const CSHeader(""),
-          CSSecret("Votre horoscope : ", "-.- vraiment?"),
-          CSButton(CSButtonType.DESTRUCTIVE, "Delete all data", () {}),
+          CSSecret("Votre compte : ", "indisponible"),
+          CSButton(CSButtonType.DESTRUCTIVE, "Supprimer toutes les données", () {
+            print('DELETE');
+            setState(() {
+              // TODO: implementer une fonction pour effacer toutes les donnees
+            });
+
+          }),
         ],
       ),
     );

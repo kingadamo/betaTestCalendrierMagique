@@ -1,26 +1,11 @@
-import 'dart:convert';
-import 'dart:math';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:flutter_week_view/flutter_week_view.dart';
-import 'package:url_launcher/url_launcher.dart' as launcher;
-import 'dart:async';
 
-import 'package:after_layout/after_layout.dart';
-import 'package:flutter/foundation.dart';
-import 'package:introduction_screen/introduction_screen.dart';
-
-import 'package:numberpicker/numberpicker.dart';
-import './tabMonthCalendar.dart';
-import './tabPrincipal.dart';
-import './tabSettings.dart';
-import './pageAddEvent.dart';
-import './pageAddEventManually.dart';
-import './dayView.dart';
 import './AfterSplashPage.dart';
+
+/// La classe @SplashPage sert à afficher un écran de bienvenue au déamrrage de
+/// l'application.
+/// L'écran est appelé à chaque démarrage
 
 class SplashPage extends StatefulWidget {
   SplashPage();

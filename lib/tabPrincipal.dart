@@ -1,8 +1,14 @@
+import 'package:calendrier_test/pageAddEventManually.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import './pageAddEvent.dart';
+
 import './dayView.dart';
-import './main.dart';
+import './globals.dart' as globals;
+import './pageAddEvent.dart';
+
+/// Le fichier @tabPrincipal se charge d'afficher l'onglet principal
+/// La page principal comporte 2 buttons de planification et le day view du jour
+/// C'est aussi l'onglet d'arrivage.
 
 class tabPrincipal extends StatefulWidget {
   var _events = {};
@@ -15,7 +21,7 @@ class tabPrincipal extends StatefulWidget {
       _tabPrincipalState(this._events, this._selectedEvents, this._controller, this.eventsDetailled);
 }
 
-class _tabPrincipalState extends State<tabPrincipal> {
+class _tabPrincipalState extends State<tabPrincipal> with TickerProviderStateMixin{
   var _events = {};
   var eventsDetailled = [];
   var txt;
@@ -55,10 +61,6 @@ class _tabPrincipalState extends State<tabPrincipal> {
             child: RaisedButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => pageAddEvent()),);
-                setState(() {
-                  txt = 'FlatButton tapped';
-                  print(txt);
-                });
               },
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(80.0)),
@@ -76,7 +78,7 @@ class _tabPrincipalState extends State<tabPrincipal> {
                   constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*0.8, minHeight: 50.0),
                   alignment: Alignment.center,
                   child: Text(
-                    "Planifier une tâche",
+                    "Planifier automatiquement",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 17),
                   ),
@@ -89,12 +91,18 @@ class _tabPrincipalState extends State<tabPrincipal> {
           Container(
             padding: const EdgeInsets.only(top: 20.0, bottom: 15),
             alignment: Alignment.center,
+            //Boutton planification 2
             child: RaisedButton(
               onPressed: () {
-                setState(() {
-                  txt = 'FlatButton 2 tapped';
-                  print(txt);
-                });
+                  showModalBottomSheet<void>(
+                  transitionAnimationController: AnimationController(duration: const Duration(milliseconds: 500), vsync: this),
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (BuildContext context) {
+                  return pageAddEventManually(_controller);
+                  });
+                  // Dialogue  pour ajouter un evenement dans le calendrier day type (DISABLED)
+                  //_showAddDialog();
               },
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(80.0)),
@@ -112,7 +120,7 @@ class _tabPrincipalState extends State<tabPrincipal> {
                   constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*0.8, minHeight: 50.0),
                   alignment: Alignment.center,
                   child: Text(
-                    "Bouton inutile",
+                    "Planifier manuellement",
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 17),
                   ),
@@ -138,7 +146,7 @@ class _tabPrincipalState extends State<tabPrincipal> {
             height: MediaQuery.of(context).size.height/2,
             padding: const EdgeInsets.only(top: 0, left: 10, right: 10, bottom : 20),
             alignment: Alignment.center,
-            child: dayView(_events, eventsDetailled),
+            child: dayView(globals.eventsDetailled, DateTime.now()),
           ),
           Container(),
           Container(),

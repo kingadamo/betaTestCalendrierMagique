@@ -1,31 +1,16 @@
-import 'dart:convert';
-import 'dart:math';
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:splashscreen/splashscreen.dart';
-import 'package:flutter_week_view/flutter_week_view.dart';
-import 'package:url_launcher/url_launcher.dart' as launcher;
 import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:numberpicker/numberpicker.dart';
-import './tabMonthCalendar.dart';
-import './tabPrincipal.dart';
-import './tabSettings.dart';
-import './pageAddEvent.dart';
-import './pageAddEventManually.dart';
-import './dayView.dart';
 import './SplashPage.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // WIDGET BUILD---
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,11 +24,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// Les classes @Splash et @SplashState servent à déterminer si l'utilisateur
+/// déjà vu le @OnBoardPage qui sert de tutoriel ou "First time launch".
+/// Ce statut est enregistré avec SharedPreferences.
 class Splash extends StatefulWidget {
   @override
   SplashState createState() => new SplashState();
 }
-
 class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
   Future checkFirstSeen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -72,11 +59,14 @@ class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
   }
 }
 
+ /* La classe @OnBoardPage sert à guider les utilisateurs qui ouvrent
+  * l'application pour la première fois. C'est un tutoriel constitué
+  * de plusieurs tiles dans lequel le concept du calendrier est expliqué.
+  */
 class OnBoardPage extends StatefulWidget {
   @override
   _OnBoardPageState createState() => _OnBoardPageState();
 }
-
 class _OnBoardPageState extends State<OnBoardPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 

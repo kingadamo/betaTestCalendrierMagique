@@ -1,29 +1,29 @@
 import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/services.dart';
 
+/// La classe @pageAddEvent sert à planifier un événement de manière automatique.
+/// L'uitilisateur doit entrer des données tel que le titre, description,
+/// preset, durée totale, nombre de séances et date limite pour obtenir une
+/// planification automatique.
+///
+/// Les entrées sont toutes validées.
+
 class pageAddEvent extends StatefulWidget {
-  var _events = {};
-  var _selectedEvents = [];
-  var _controller = CalendarController();
   pageAddEvent();
   @override
   _pageAddEventState createState() => _pageAddEventState();
 }
 
 class _pageAddEventState extends State<pageAddEvent> {
-  var _events = {};
-  var txt;
-  var _selectedEvents = [];
-  var _controller = CalendarController();
   _pageAddEventState();
   final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
   String dropdownValue = 'Examen (4 séances)';
   String dureeTotaleString = "0";
-  var dureeTotale;
+  Duration dureeTotale;
 
   final nameTacheController = TextEditingController();
   final nombreSeanceController = TextEditingController();
@@ -54,9 +54,8 @@ class _pageAddEventState extends State<pageAddEvent> {
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child:
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                  Widget>[
             Container(
               margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -119,7 +118,8 @@ class _pageAddEventState extends State<pageAddEvent> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                              margin: const EdgeInsets.only(bottom: 5.0, left:10),
+                              margin:
+                                  const EdgeInsets.only(bottom: 5.0, left: 10),
                               //padding: const EdgeInsets.only(top: 5.0, left: 6.0),
                               child: Text(
                                 'Description :',
@@ -260,7 +260,7 @@ class _pageAddEventState extends State<pageAddEvent> {
                             child: IconButton(
                                 icon: Icon(Icons.access_alarm_rounded),
                                 onPressed: () {
-                                  print('timer');
+                                  // timer
                                   showDialog(
                                     context: context,
                                     builder: (context) {
@@ -272,21 +272,13 @@ class _pageAddEventState extends State<pageAddEvent> {
                                         children: [
                                           Center(
                                             child: SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  10,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.3,
+                                              width: MediaQuery.of(context).size.width - 10,
+                                              height: MediaQuery.of(context).size.height * 0.3,
                                               child: CupertinoTimerPicker(
                                                 onTimerDurationChanged:
                                                     (value) {
-                                                  print(value.toString());
                                                   setState(() {
-                                                    dureeTotaleString =
-                                                        value.toString();
+                                                    dureeTotaleString = value.toString();
                                                     dureeTotale = value;
                                                   });
                                                 },
@@ -303,7 +295,8 @@ class _pageAddEventState extends State<pageAddEvent> {
                                                     'Annuler',
                                                     style: TextStyle(
                                                         color: Colors.red),
-                                                  )),
+                                                  )
+                                              ),
                                               TextButton(
                                                   onPressed: () {
                                                     // Todo save the selected duration to the ViewModel
@@ -335,7 +328,8 @@ class _pageAddEventState extends State<pageAddEvent> {
                                 'Date Limite :',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(fontSize: 16),
-                              )),
+                              )
+                          ),
                           Container(
                               child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -381,12 +375,13 @@ class _pageAddEventState extends State<pageAddEvent> {
                         ),
                         child: FlatButton(
                           onPressed: () {
-                            //returns true if the form is valid, or false if otherwise.
-                            if (_formKey.currentState.validate()) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('Processing Data (correct!)')));
+                            if (dureeTotale.inSeconds.toInt() >= 900) {
+                              if (_formKey.currentState.validate()) {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data (correct!)')));
+                                _generationHoraireAuto(context);
+                              }
+                            }else{
+                              _showNotEnoughTimeDialog();
                             }
                           },
                           child: Text('Planifier'),
@@ -418,17 +413,72 @@ class _pageAddEventState extends State<pageAddEvent> {
       ),
     );
   }
-
+ /// Affiche un dialogue quand le temps séléctionné est inférieur a 15 minutes
+  _showNotEnoughTimeDialog() async {
+    await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content:
+          Text("Les événements doivent durer au minimum 15 minutes."),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            )
+          ],
+        ));
+  }
+  /// Affiche un dialogue pour sélectionner une date
   _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate, // Refer step 1
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      firstDate: DateTime.now().subtract(Duration(days:365)),
+      lastDate: DateTime.now().add(Duration(days: 1825)),
     );
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
       });
   }
+
+  /// Algorithme de génération d'horaire
+  _generationHoraireAuto(BuildContext context) async{
+    int dureeTotaleInt = dureeTotale.inMinutes.toInt();
+    int nombreSeanceInt = int.parse(nombreSeanceController.text);
+    if(  (dureeTotaleInt / nombreSeanceInt) < 15){
+      ScaffoldMessenger.of(context).hideCurrentSnackBar(reason: SnackBarClosedReason.action);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('ENTRÉES INCORRECTES! (Durée par séance)')));
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content:
+            Text("Les séances doivent durer au minimum 15 minutes."),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Ok"),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+              )
+            ],
+          ));
+      // Quitter avant la fin
+      return;
+    }
+    var dureeParSeance = dureeTotaleInt / nombreSeanceInt ;
+
+    var dateDebut = [
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 8)
+    ];
+    dateDebut[0].add(Duration(days: 1));
+
+    var dateFin = [
+      dateDebut[0].add(Duration(minutes: dureeParSeance.toInt()))
+    ];
+
+  }
+
 }

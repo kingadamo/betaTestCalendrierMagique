@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import './main.dart';
+
+import './dayView.dart';
+import './globals.dart' as globals;
+
+/// Le ficheir @tabMonthCalendar s'occupe d'afficher le contenu du deuxième
+/// onglet (affichage mensuel).
+/// L'affichage inclus le table_calendar, récapitulatif du mois.
 
 class tabMonthCalendar extends StatefulWidget {
   var events = {};
@@ -12,7 +18,8 @@ class tabMonthCalendar extends StatefulWidget {
       _tabMonthCalendarState(this.events, this.selectedEvents, this.controller);
 }
 
-class _tabMonthCalendarState extends State<tabMonthCalendar> {
+class _tabMonthCalendarState extends State<tabMonthCalendar>
+    with TickerProviderStateMixin {
   var events = {};
   var selectedEvents = [];
   var controller = CalendarController();
@@ -68,14 +75,20 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment(0.0, 7),
-                      colors: [const Color(0xFFCF000F), const Color(0xFF450005)],
+                      colors: [
+                        const Color(0xFFCF000F),
+                        const Color(0xFF450005)
+                      ],
                     ),
                   ),
                   formatButtonDecoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment(0.0, 2),
-                      colors: [const Color(0xFF0E86D4), const Color(0xFF074166)],
+                      colors: [
+                        const Color(0xFF0E86D4),
+                        const Color(0xFF074166)
+                      ],
                     ),
                     borderRadius: BorderRadius.circular(20.0),
                   ),
@@ -95,7 +108,10 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [const Color(0xFF0E86D4), const Color(0xFF450005)],
+                              colors: [
+                                const Color(0xFF0E86D4),
+                                const Color(0xFF450005)
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -113,7 +129,10 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [const Color(0xFF002969), const Color(0xFF450005)],
+                              colors: [
+                                const Color(0xFF002969),
+                                const Color(0xFF450005)
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(5.0),
                           ),
@@ -138,8 +157,7 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
             ),
 
             // Affichage en bas de la page
-
-            ...selectedEvents.map((event) => ListTile(
+            ...selectedEvents.map( (event) => ListTile(
                 title: Text(
                   '$event',
                   textAlign: TextAlign.left,
@@ -148,6 +166,38 @@ class _tabMonthCalendarState extends State<tabMonthCalendar> {
                     color: Colors.white,
                     fontSize: 18,
                   ),
+                ),
+                trailing:
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                        transitionAnimationController: AnimationController(
+                            duration: const Duration(milliseconds: 500),
+                            vsync: this),
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                              ),
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment(0.0, 2),
+                                colors: [const Color(0xFF0E86D4), const Color(0xFF04273D)],
+                                //colors: [ const Color(0xFF0E86D4), const Color(0xFF04273D)],
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, top: 28, right: 20, bottom: 25),
+                              child: dayView(globals.eventsDetailled, controller.selectedDay),
+                            ),
+                          );
+                        });
+                  },
                 ),
               ),
             ),

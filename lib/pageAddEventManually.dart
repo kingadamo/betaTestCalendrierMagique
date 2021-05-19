@@ -1,32 +1,29 @@
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_week_view/flutter_week_view.dart';
-import './main.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:flutter/services.dart';
-import './AfterSplashPage.dart';
-import 'main.dart';
+import 'package:flutter_week_view/flutter_week_view.dart';
+import 'package:table_calendar/table_calendar.dart';
+
 import './globals.dart' as globals;
 
+/// La classe @pageAddEvent sert à planifier un événement de manière manuelle.
+/// L'uitilisateur doit entrer des données tel que le titre, description,
+/// durée totale et la date/heure de début pour enregistrer une planification manuelle.
+///
+/// Les entrées sont toutes validées.
+
 class pageAddEventManually extends StatefulWidget {
-  var _events = {};
-  var _selectedEvents = [];
   var _controller = CalendarController();
   pageAddEventManually(this._controller);
   @override
-  _pageAddEventManuallyState createState() =>
-      _pageAddEventManuallyState(this._controller);
+  _pageAddEventManuallyState createState() => _pageAddEventManuallyState(this._controller);
 }
 
 class _pageAddEventManuallyState extends State<pageAddEventManually> {
-  var _events = {};
-  var txt;
-  var _selectedEvents = [];
   var _controller = CalendarController();
-
   _pageAddEventManuallyState(this._controller);
 
   final _formKey = GlobalKey<FormState>();
@@ -224,10 +221,10 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
                                               'Annuler',
                                               style:
                                                   TextStyle(color: Colors.red),
-                                            )),
+                                            )
+                                        ),
                                         TextButton(
                                             onPressed: () {
-                                              // Todo save the selected duration to the ViewModel
                                               Navigator.pop(context);
                                             },
                                             child: Text('Soumettre')),
@@ -262,8 +259,7 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Container(
-                          child: Text(
-                            "${selectedDate.toLocal()}".split(' ')[0],
+                          child: Text("${selectedDate.toLocal()}".split(' ')[0],
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -271,8 +267,7 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
                           ),
                         ),
                         Container(
-                          child: Text(
-                            " à ${selectedDate.toLocal().hour}h${selectedDate.minute}m",
+                          child: Text(" à ${selectedDate.toLocal().hour}h${selectedDate.minute}m",
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -361,7 +356,6 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
                             } else{
                               _showNotEnoughTimeDialog();
                             }
-
                             //Navigator.pop(context);
                           },
                         ),
@@ -376,7 +370,7 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
   _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate, // Refer step 1
+      initialDate: selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
@@ -386,7 +380,7 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
       });
   }
 
-  // Fonction planification manuelle (ajout dans la matrice)
+  /// Fonction planification manuelle (ajout dans la matrice)
   void ajoutEventDetailledManuel() {
     var name = nameTacheController.text;
     var description = descriptionTacheController.text;
@@ -399,18 +393,16 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
         backgroundColor:
             Colors.primaries[Random().nextInt(Colors.primaries.length)],
       ));
-      if (globals.events[DateTime.utc(selectedDate.year, selectedDate.month,
-              selectedDate.day, 12, 00, 00)] !=
-          null) {
-        globals.events[DateTime.utc(selectedDate.year, selectedDate.month,
-                selectedDate.day, 12, 00, 00)]
-            .add(name);
+      if (globals.events[DateTime.utc(selectedDate.year, selectedDate.month, selectedDate.day, 12, 00, 00)] != null) {
+        globals.events[DateTime.utc(selectedDate.year, selectedDate.month, selectedDate.day, 12, 00, 00)].add(name);
       } else {
-        globals.events[DateTime.utc(selectedDate.year, selectedDate.month,
-            selectedDate.day, 12, 00, 00)] = [name];
+        globals.events[DateTime.utc(selectedDate.year, selectedDate.month, selectedDate.day, 12, 00, 00)] = [name];
       }
     });
   }
+
+  /// La méthode @_showAddDialog() sert afficher une fenetre qui permet d'ajouter
+  /// evenement dans le table_calendar (calendrier mensuel)
 
   _showNotEnoughTimeDialog() async {
     await showDialog(
@@ -429,49 +421,18 @@ class _pageAddEventManuallyState extends State<pageAddEventManually> {
             ));
   }
 
+ /// La méthode @_convertDayCalendarToMonthCalendar() sert à transférer les
+ /// événements contenus dans la matrice remplis de flutter_week_view events (vue quotidienne)
+ /// dans la matrice d'évenements table_calendar (vue mensuelle)
+
   _convertDayCalendarToMonthCalendar() {
     int numberOfEvents = globals.eventsDetailled.length;
     setState(() {
       for (var i = 0; i < numberOfEvents; i++) {
-        if (globals.events[DateTime.utc(
-                globals.eventsDetailled[i].start.year,
-                globals.eventsDetailled[i].start.month,
-                globals.eventsDetailled[i].start.day,
-                12,
-                00,
-                00)] !=
-            null) {
-          globals.events[DateTime.utc(
-                  globals.eventsDetailled[i].start.year,
-                  globals.eventsDetailled[i].start.month,
-                  globals.eventsDetailled[i].start.day,
-                  12,
-                  00,
-                  00)]
-              .add(globals.eventsDetailled[i].title);
+        if (globals.events[DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month, globals.eventsDetailled[i].start.day, 12, 00, 00)] != null) {
+          globals.events[DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month, globals.eventsDetailled[i].start.day, 12, 00, 00)].add(globals.eventsDetailled[i].title);
         } else {
-          print("mon print:");
-          print(globals.events[globals.eventsDetailled[i].start.day]);
-          print(i);
-          print(globals.eventsDetailled[i].title);
-          print(DateTime.utc(
-              globals.eventsDetailled[i].start.year,
-              globals.eventsDetailled[i].start.month,
-              globals.eventsDetailled[i].start.day,
-              12,
-              00,
-              00));
-          globals.events[DateTime.utc(
-              globals.eventsDetailled[i].start.year,
-              globals.eventsDetailled[i].start.month,
-              globals.eventsDetailled[i].start.day,
-              12,
-              00,
-              00)] = [globals.eventsDetailled[i].title];
-          // globals.events= {
-          //   DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month,globals.eventsDetailled[i].start.day, 12, 00,00) : [globals.eventsDetailled[i].title],
-          // };
-          print(globals.events);
+          globals.events[DateTime.utc(globals.eventsDetailled[i].start.year, globals.eventsDetailled[i].start.month, globals.eventsDetailled[i].start.day, 12, 00, 00)] = [globals.eventsDetailled[i].title];
         }
       }
     });
