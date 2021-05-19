@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import './dayView.dart';
+import './dayViewOther.dart';
 import './globals.dart' as globals;
 
 /// Le ficheir @tabMonthCalendar s'occupe d'afficher le contenu du deuxième
@@ -193,7 +194,7 @@ class _tabMonthCalendarState extends State<tabMonthCalendar>
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, top: 28, right: 20, bottom: 25),
-                              child: dayView(globals.eventsDetailled, controller.selectedDay),
+                              child: dayViewOther(globals.eventsDetailled, controller.selectedDay),
                             ),
                           );
                         });
