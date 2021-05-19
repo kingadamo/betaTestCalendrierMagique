@@ -6,32 +6,39 @@ int dureeParSeance = dureeTotal/nmbrSeance;
  int debutSeance = 8h;
  int finSeance = debutSeance + dureeParSeance;
  
- PARCOURIR LES EVENTS : 
+ PARCOURIR LES EVENTS : (Boucle)
  if(dateEvent1 != dateEvent2){
  dateEvent1 = dateEvent1;
  }
  else if(dateEvent1 == dateEvent2){
- PARCOURIR LES SÉANCES :
+ PARCOURIR LES SÉANCES : (Boucle)
   if(debutSeance1 == debutSeance2){
   debutSeance1 == finSeance2 + 20mins (pause);
     if(finSeance1 > 20h){
     dateEvent1 = dateEvent1 + 1jour;
     }
-  }else if(finSeance1 < debutSeance2){}
- 
- }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  } else if(finSeance1 + 20mins (pause) < debutSeance2){}
+  debutSeance1 = debutSeance1;
+  finSeance1 = finSeance1;
+  } else if(debutSeance1 > finSeance2 + 20mins (pause)){
+  debutSeance1 = debutSeance1;
+  finSeance1 = finSeance1;
+    if(finSeance1 > 20h){
+    dateEvent1 = dateEvent1 + 1jour;
+    }
+  } else {
+  dateEvent1 = dateEvent1 + 1jour;
+  }
 }
+}
+
+En gros, l'algorithme sert a mettre des séances dans le calendrier. Pour ce faire, on met le début de chaque
+séance à 8h du matin et l'algorithme va parcourir toutes les évenements pour savoir si cet évenement peut 
+entrer dans cette journée ou non. Si deux évenement ont la même heure de début, l'algorithme va mettre le
+début d'un des deux après la fin de l'autre avec un 20 minutes de pause. Si la fin de cet évenement déoasse
+20h, cet évenement devra être remis au jour d'après. On a aussi mis d'autres conditions à respecter pour 
+être sur que cet évenement ne soit pas en même temps qu'un autre.
+
+Malheureusement, nous n'avons pas eu le temps de coder cet algorithme puisque les variables ne sont pas aussi
+facile à reprendre et parce que la boucle devra être mises sur tout les évenement créer et cela aurait été
+trop compliqué à coder.
